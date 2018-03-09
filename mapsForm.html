@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+  <style >
+    .btn {
+      margin: 3px;
+      background-color: lightblue;
+    }
+
+  </style>
+</head>
+<body>
+	<div id="map" style="width:400px;height:400px; background-color: #ccc; "></div>
+
+<script>
+	     // kao Traversy
+	function initMap() {
+		
+       
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 45.7763, lng: 15.97892},
+          zoom: 15
+        });
+
+        var markers = [
+          {position: {lat: 45.7763, lng: 15.97892}, title: 'Avenue Mall'},
+          {position: {lat: 45.7785, lng: 15.9723}, title: 'ZV'},
+          {position: {lat: 45.7788, lng: 15.9818}, title: 'MSU'}     
+        ]
+
+      for(var i = 0;i < markers.length;i++){
+        // Add marker
+        addMarker(markers[i]);
+      }
+
+      function addMarker(markerSingle) {
+           var marker = new google.maps.Marker({
+            position: markerSingle.position,
+            map: map
+            });
+
+           var infoWindow = new google.maps.InfoWindow({
+           content: markerSingle.position.lat.toString() + ", " + markerSingle.position.lng.toString() + '<button class="btn"> Copy </button>'
+          });
+
+           marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+     
+      }
+      
+  }
+      
+
+
+</script>
+ <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcZ-CeDEwScFOfSeT_cYnAx8Ltpq10jb8&callback=initMap">
+    </script>
+	
+</body>
+</html>
