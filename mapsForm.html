@@ -3,62 +3,123 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-  <style >
-    .btn {
-      margin: 3px;
-      background-color: lightblue;
-    }
-
-  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div id="map" style="width:400px;height:400px; background-color: #ccc; "></div>
+  <div class="container">
+    <div class="map">
+      <div id="map" style="width:100%;height:400px; background-color: #ccc;"></div>
+    </div>
 
-<script>
-	     // kao Traversy
-	function initMap() {
-		
-       
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 45.7763, lng: 15.97892},
-          zoom: 15
+    <div class="form">
+      <form name="mapForm">
+        <label for="address">Adresa:</label><br>
+        <textarea id= "address" name="address" rows="2" required></textarea><br>
+        <label for="name">Ime i prezime:</label><br>
+        <input type="text" name="name" required><br>
+        <label for="email">E-mail:</label><br>
+        <input type="email" name="email" reguired><br>
+        <label for="dateTime">Datum:</label><br>
+        <input type="datetime-local" name="dateTime"><br>
+        <input id="submitButton" type="submit" value="Pošalji">
+      </form>
+    </div>
+
+    <div class="clearfix"></div>
+  </div>
+
+
+
+  <script>
+
+    function initMap() {    
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 45.7763, lng: 15.97892},
+      zoom: 15
+    });
+
+    var markers = [
+    {position: {lat: 45.7763, lng: 15.97892}, title: 'Avenue Mall'},
+    {position: {lat: 45.7785, lng: 15.9723}, title: 'ZV'},
+    {position: {lat: 45.7788, lng: 15.9818}, title: 'MSU'}     
+    ]
+
+        // Make marker
+        for(var i = 0;i < markers.length;i++){        
+          makeMarker(markers[i]);
+        }
+
+        function makeMarker(markerSingle) {
+         var marker = new google.maps.Marker({
+          position: markerSingle.position,
+          map: map
         });
 
-        var markers = [
-          {position: {lat: 45.7763, lng: 15.97892}, title: 'Avenue Mall'},
-          {position: {lat: 45.7785, lng: 15.9723}, title: 'ZV'},
-          {position: {lat: 45.7788, lng: 15.9818}, title: 'MSU'}     
-        ]
+         var posMarker = markerSingle.position.lat.toString() + "," + markerSingle.position.lng.toString();
 
-      for(var i = 0;i < markers.length;i++){
-        // Add marker
-        addMarker(markers[i]);
-      }
+         jQuery(document).ready(function(){  
+           $.get('https://maps.googleapis.com/maps/api/geocode/json' , {
+              //latlng: '40.714224,-73.961452',
+              latlng: posMarker,           
+              key: 'AIzaSyDcZ-CeDEwScFOfSeT_cYnAx8Ltpq10jb8'}, 
+              function(response, status) {
+                var address =(response.results[0].formatted_address);
+                   // console.log(address);
+                   makeInfoWindow(address);           
+                 });
+         });
 
-      function addMarker(markerSingle) {
-           var marker = new google.maps.Marker({
-            position: markerSingle.position,
-            map: map
-            });
-
-           var infoWindow = new google.maps.InfoWindow({
-           content: markerSingle.position.lat.toString() + ", " + markerSingle.position.lng.toString() + '<button class="btn"> Copy </button>'
+         function makeInfoWindow(address){
+          var infoWindow = new google.maps.InfoWindow({
+            content: address + '<br/>' + '<button class="btn" id="btn"> Odaberi </button>'
           });
 
-           marker.addListener('click', function(){
-            infoWindow.open(map, marker);
+          marker.addListener('click', function(){                
+            infoWindow.open(map, marker);  
+                 //console.log(address);   
+                 enableButton(infoWindow, address); 
+               });
+        } 
+
+        function enableButton(infoWindow, address) {
+
+          var button =  document.getElementById('btn');
+          button.addEventListener("click", function(){
+            document.getElementById("address").innerHTML = 
+            address.toString();                       
+            console.log(address);
           });
-     
+        }     
+
+      }      
+    }
+
+    jQuery(document).ready(function(){ 
+      $('#submitButton').click(function() { 
+
+
+      // validate if form filled      
+      var x = document.forms["mapForm"]["address"].value;
+      var y = document.forms["mapForm"]["name"].value;
+      var z = document.forms["mapForm"]["email"].value;
+      if (x === "" | y==="" |z==="") {
+        alert("Molimo popunite prazna polja");        
       }
-      
-  }
-      
+      else{
+
+        alert('Podaci su poslani');           
+      }
+      });
+    });
 
 
+
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcZ-CeDEwScFOfSeT_cYnAx8Ltpq10jb8&callback=initMap">
 </script>
- <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcZ-CeDEwScFOfSeT_cYnAx8Ltpq10jb8&callback=initMap">
-    </script>
-	
+
 </body>
 </html>
