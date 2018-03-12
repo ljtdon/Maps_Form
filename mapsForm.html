@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <div class="container">
+
     <div class="map">
       <div id="map" style="width:100%;height:400px; background-color: #ccc;"></div>
     </div>
@@ -57,13 +59,15 @@
           map: map
         });
 
+          // Lat Lng position
          var posMarker = markerSingle.position.lat.toString() + "," + markerSingle.position.lng.toString();
 
+          // Getting address from lat&Lng
          jQuery(document).ready(function(){  
-           $.get('https://maps.googleapis.com/maps/api/geocode/json' , {
-              //latlng: '40.714224,-73.961452',
+           $.get('https://maps.googleapis.com/maps/api/geocode/json' , {           
               latlng: posMarker,           
               key: 'AIzaSyDcZ-CeDEwScFOfSeT_cYnAx8Ltpq10jb8'}, 
+
               function(response, status) {
                 var address =(response.results[0].formatted_address);
                    // console.log(address);
@@ -71,11 +75,13 @@
                  });
          });
 
+        // InfoWindow
          function makeInfoWindow(address){
           var infoWindow = new google.maps.InfoWindow({
             content: address + '<br/>' + '<button class="btn" id="btn"> Odaberi </button>'
           });
 
+          // Add listener on marker
           marker.addListener('click', function(){                
             infoWindow.open(map, marker);  
                  //console.log(address);   
@@ -83,6 +89,7 @@
                });
         } 
 
+        // Button and listener
         function enableButton(infoWindow, address) {
 
           var button =  document.getElementById('btn');
@@ -96,21 +103,19 @@
       }      
     }
 
+    // Submit form
     jQuery(document).ready(function(){ 
-    $('#submitButton').click(function() { 
+      $('#submitButton').click(function() { 
 
-      // validate if form filled
-      $('input').each(function() {
-        if(!$(this).val()){
-          alert('Popunite sva polja');
-          return false;
-        }
-
+          // validate if form filled
+          $('input').each(function() {
+            if(!$(this).val()){
+                alert('Popunite sva polja');
+                return false;
+            }
+          });
       });
-
     });
-
-  });
 
 
 
