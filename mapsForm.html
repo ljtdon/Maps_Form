@@ -97,22 +97,20 @@
     }
 
     jQuery(document).ready(function(){ 
-      $('#submitButton').click(function() { 
+    $('#submitButton').click(function() { 
 
+      // validate if form filled
+      $('input').each(function() {
+        if(!$(this).val()){
+          alert('Popunite sva polja');
+          return false;
+        }
 
-      // validate if form filled      
-      var x = document.forms["mapForm"]["address"].value;
-      var y = document.forms["mapForm"]["name"].value;
-      var z = document.forms["mapForm"]["email"].value;
-      if (x === "" | y==="" |z==="") {
-        alert("Molimo popunite prazna polja");        
-      }
-      else{
-
-        alert('Podaci su poslani');           
-      }
       });
+
     });
+
+  });
 
 
 
